@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin - Orders</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.6.15/sweetalert2.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.6.15/sweetalert2.all.min.js"></script>
+  <script src="js/adminOrders.js"></script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #000 0%, #2c002e 100%);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background: #ff69b4;
+      padding: 18px 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li {
+      margin: 0 22px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: 1px;
+      border-radius: 22px;
+      padding: 8px 18px;
+      transition: all 0.3s;
+    }
+    nav ul li a:hover, nav ul li a.active {
+      background: #fff;
+      color: #ff69b4;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 36px;
+      font-family: 'Playfair Display', serif;
+      color: #ff69b4;
+      font-size: 2.2em;
+      letter-spacing: 1px;
+    }
+    #orders {
+      width: 98%;
+      margin: 0 auto 40px auto;
+    }
+    #ordersTable {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffb6d2;
+      border-radius: 16px;
+      overflow: hidden;
+      color: #000;
+    }
+    #ordersTable th, #ordersTable td {
+      padding: 14px 12px;
+      text-align: center;
+      border-bottom: 1.5px solid #fff;
+    }
+    #ordersTable th {
+      background: #ff69b4;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.15em;
+    }
+    #ordersTable tr:nth-child(even) {
+      background: #ffc1dc;
+    }
+    #ordersTable tr:hover {
+      background: #ffe4ec;
+    }
+    #logoutBtn {
+      cursor: pointer;
+    }
+    @media (max-width: 700px) {
+      #orders { width: 98%; }
+      #ordersTable th, #ordersTable td { padding: 8px 4px; font-size: 0.95em; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="admin.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="adminProducts.html"><i class="fas fa-tshirt"></i> Products</a></li>
+      <li><a href="adminUsers.html"><i class="fas fa-users"></i> Users</a></li>
+      <li><a href="adminOrders.html" class="active"><i class="fas fa-box-open"></i> Orders</a></li>
+      <li><a href="adminSales.html"><i class="fas fa-chart-pie"></i> Sales</a></li>
+      <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </nav>
+
+  <h2>Manage Orders</h2>
+
+  <div id="orders">
+    <!-- Orders table will be injected by JS -->
+    <table id="ordersTable">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>User</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- JS will populate this -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    $('#logoutBtn').on('click', function () {
+      sessionStorage.clear();
+      window.location.href = 'login.html';
+    });
+
+    // Sample static data for layout demo — replace with fetch from your backend
+    const orders = [
+      { id: 'ORD001', user: 'Hazel E.', items: 3, total: 1500, status: 'Shipped', date: '2025-07-25' },
+      { id: 'ORD002', user: 'John D.', items: 1, total: 499, status: 'Pending', date: '2025-07-24' },
+      { id: 'ORD003', user: 'Jane S.', items: 5, total: 2700, status: 'Delivered', date: '2025-07-22' }
+    ];
+
+    $(document).ready(function () {
+      const tbody = $('#ordersTable tbody');
+      orders.forEach(order => {
+        tbody.append(`
+          <tr>
+            <td>${order.id}</td>
+            <td>${order.user}</td>
+            <td>${order.items}</td>
+            <td>₱${order.total}</td>
+            <td>${order.status}</td>
+            <td>${order.date}</td>
+          </tr>
+        `);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>User Profile</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Bootstrap CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    crossorigin="anonymous"
+  />
+
+  <!-- SweetAlert2 -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.16.1/sweetalert2.min.css"
+    crossorigin="anonymous"
+  />
+
+  <!-- Custom Style -->
+  <style>
+    body {
+      background-color: #121212;
+      color: #f8f8f8;
+      font-family: 'Montserrat', sans-serif;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff69b4;
+      margin-bottom: 40px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 700px;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.2);
+    }
+
+    label {
+      font-weight: 600;
+      color: #f8f8f8;
+    }
+
+    .form-group input {
+      background-color: #2c2c2c;
+      color: #fff;
+      border: 1px solid #444;
+    }
+
+    .form-group input:focus {
+      border-color: #ff69b4;
+      box-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
+    }
+
+    button#updateBtn {
+      background-color: #ff69b4;
+      border: none;
+      padding: 10px 30px;
+      font-weight: bold;
+      color: white;
+      display: block;
+      margin: 30px auto 0;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button#updateBtn:hover {
+      background-color: #ff85c1;
+    }
+
+    #avatarPreview {
+      margin-top: 10px;
+      max-width: 120px;
+      border-radius: 50%;
+      border: 2px solid #ff69b4;
+      display: block;
+    }
+  </style>
+
+  <!-- jQuery + Bootstrap + SweetAlert -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.16.1/sweetalert2.min.js" crossorigin="anonymous"></script>
+
+  <!-- Your JS -->
+  <script src="js/user.js" defer></script>
+</head>
+<body id="profile">
+  <div class="container">
+    <h1><i class="fas fa-user-circle"></i> Your Profile</h1>
+
+    <form id="profileForm" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="avatar"><i class="fas fa-image"></i> Avatar:</label>
+        <input type="file" class="form-control-file" id="avatar" name="image" accept="image/*" />
+        <img id="avatarPreview" src="#" alt="Avatar Preview" style="display: none;" />
+      </div>
+
+      <div class="form-group">
+        <label for="title"><i class="fas fa-user-tag"></i> Title:</label>
+        <input type="text" class="form-control" id="title" name="title" />
+      </div>
+
+      <div class="form-group">
+        <label for="firstName"><i class="fas fa-user"></i> First Name:</label>
+        <input type="text" class="form-control" id="firstName" name="fname" />
+      </div>
+
+      <div class="form-group">
+        <label for="lastName"><i class="fas fa-user"></i> Last Name:</label>
+        <input type="text" class="form-control" id="lastName" name="lname" />
+      </div>
+
+      <div class="form-group">
+        <label for="address"><i class="fas fa-map-marker-alt"></i> Address:</label>
+        <input type="text" class="form-control" id="address" name="addressline" />
+      </div>
+
+      <div class="form-group">
+        <label for="town"><i class="fas fa-city"></i> Town:</label>
+        <input type="text" class="form-control" id="town" name="town" required />
+      </div>
+
+      <div class="form-group">
+        <label for="phone"><i class="fas fa-phone"></i> Phone:</label>
+        <input type="text" class="form-control" id="phone" name="phone" required />
+      </div>
+
+      <div class="form-group">
+        <label for="zipcode"><i class="fas fa-envelope"></i> Postcode:</label>
+        <input type="text" class="form-control" id="zipcode" name="zipcode" />
+      </div>
+
+      <button type="submit" id="updateBtn"><i class="fas fa-save"></i> Submit</button>
+    </form>
+  </div>
+
+  <script>
+    // Show preview when avatar selected
+    $("#avatar").on("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          $("#avatarPreview").attr("src", e.target.result).show();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+</body>
+</html>

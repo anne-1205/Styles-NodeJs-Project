@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Welcome - Fashionista</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <style>
+    :root {
+      --primary-pink: #ff69b4;
+      --light-pink: #ffb6c1;
+      --black: #111;
+      --white: #fff;
+      --font-main: 'Montserrat', sans-serif;
+      --font-heading: 'Playfair Display', serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--black);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--light-pink);
+    }
+
+    .logo {
+      font-family: var(--font-heading);
+      font-size: 1.8em;
+      color: var(--primary-pink);
+      font-weight: bold;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links li a {
+      color: var(--white);
+      font-weight: 600;
+      padding: 10px 15px;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+
+    .nav-links li a:hover,
+    .nav-links li a.active {
+      background: var(--primary-pink);
+      color: var(--black);
+    }
+
+    /* Hero Section */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 60px 40px;
+      background: linear-gradient(to right, #111, #1a1a1a);
+    }
+
+    .hero-text {
+      flex: 1;
+      max-width: 600px;
+    }
+
+    .hero-text h1 {
+      font-family: var(--font-heading);
+      font-size: 3.5em;
+      margin-bottom: 20px;
+    }
+
+    .highlight {
+      color: var(--primary-pink);
+    }
+
+    .hero-text p {
+      font-size: 1.2em;
+      color: #ccc;
+      margin-bottom: 30px;
+    }
+
+    .hero-buttons .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      margin-right: 15px;
+      font-weight: 600;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .btn.pink {
+      background: var(--primary-pink);
+      color: var(--black);
+    }
+
+    .btn.pink:hover {
+      background: var(--light-pink);
+    }
+
+    .btn.outline {
+      border: 2px solid var(--primary-pink);
+      color: var(--primary-pink);
+      background: transparent;
+    }
+
+    .btn.outline:hover {
+      background: var(--primary-pink);
+      color: var(--black);
+    }
+
+    .hero-icons {
+      flex: 1;
+      text-align: center;
+      font-size: 5em;
+      color: var(--light-pink);
+    }
+
+    .hero-icons i {
+      margin: 0 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .hero-icons i:hover {
+      transform: scale(1.2);
+      color: var(--primary-pink);
+    }
+
+    /* Products Section */
+    .products {
+      padding: 60px 40px;
+      text-align: center;
+    }
+
+    .products h2 {
+      font-family: var(--font-heading);
+      font-size: 2.5em;
+      color: var(--primary-pink);
+      margin-bottom: 40px;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .card {
+  background: #1e1e1e;
+  border-radius: 15px;
+  overflow: hidden;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+}
+
+.card img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain; /* shows full image without cropping */
+  background-color: #fff; /* optional: to show white background if image has transparency */
+  padding: 10px;
+}
+
+.card h3 {
+  color: var(--light-pink);
+  margin-top: 10px;
+  font-size: 1.2em;
+}
+
+.card p {
+  color: #ccc;
+  font-size: 0.95em;
+  padding: 0 15px;
+  margin: 10px 0;
+  min-height: 50px; /* makes all texts roughly equal height */
+}
+
+.btn.small {
+  font-size: 0.9em;
+  padding: 10px 20px;
+  margin-top: auto;
+  background: var(--primary-pink);
+  color: var(--black);
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.btn.small:hover {
+  background: var(--light-pink);
+}
+
+    footer {
+      background: #0d0d0d;
+      color: #aaa;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 0.9em;
+      margin-top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-text,
+      .hero-icons {
+        max-width: 100%;
+      }
+
+      .card-container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="logo">Fashionista</div>
+    <ul class="nav-links">
+      <li><a href="guest.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+      <li><a href="register.html"><i class="fas fa-user-plus"></i> Register</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Unleash Your <span class="highlight">Fashion</span></h1>
+      <p>Style isn't just about what you wear—it's how you express yourself. Shop our classy, elegant collections.</p>
+      <div class="hero-buttons">
+        <a href="register.html" class="btn pink"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="login.html" class="btn outline"><i class="fas fa-sign-in-alt"></i> Login</a>
+      </div>
+    </div>
+    <div class="hero-icons">
+      <i class="fas fa-tshirt"></i>
+      <i class="fas fa-gem"></i>
+      <i class="fas fa-shoe-prints"></i>
+    </div>
+
+  
+  </section>
+
+  <!-- Featured Products -->
+  <section class="products">
+    <h2>Featured Collections</h2>
+    <div class="search-filter" style="display:flex;justify-content:center;gap:20px;margin-bottom:30px;">
+      <input type="text" id="searchBox" placeholder="Search products..." style="padding:10px 18px;border-radius:20px;border:none;width:220px;font-size:1em;">
+      <select id="categoryFilter" style="padding:10px 18px;border-radius:20px;border:none;width:180px;font-size:1em;">
+        <option value="">All Categories</option>
+        <option value="dress">Dresses</option>
+        <option value="jewelry">Jewelry</option>
+        <option value="shoes">Shoes</option>
+        <option value="bags">Bags</option>
+        <option value="accessories">Accessories</option>
+
+      </select>
+      <button id="searchBtn" class="btn small" style="margin:0;">Search</button>
+    </div>
+    <div class="card-container" id="guestProducts"></div>
+    <div id="infiniteLoader" style="text-align:center;display:none;color:#ff69b4;font-weight:600;margin:20px 0;">Loading more products...</div>
+  </section>
+
+  <script>
+    $(document).ready(function () {
+      let allProducts = [];
+      let filteredProducts = [];
+      let currentPage = 1;
+      const productsPerPage = 8;
+      let loading = false;
+
+      function filterProducts() {
+        const search = $('#searchBox').val().trim().toLowerCase();
+        const category = $('#categoryFilter').val();
+        filteredProducts = allProducts.filter(item => {
+          const title = (item.description || '').toLowerCase();
+          const matchSearch = title.includes(search);
+          const matchCategory = !category || (item.category && item.category === category);
+          return matchSearch && matchCategory;
+        });
+        currentPage = 1;
+        renderProducts();
+      }
+
+      function renderProducts() {
+        const container = $('#guestProducts');
+        container.html('');
+        $('#pagination').remove();
+        if (filteredProducts.length === 0) {
+          container.html('<p style="color:#ff69b4;text-align:center;width:100%;">No products found.</p>');
+          return;
+        }
+        // Pagination logic
+        const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+        if (currentPage > totalPages) currentPage = 1;
+        const start = (currentPage - 1) * productsPerPage;
+        const end = start + productsPerPage;
+        const pageProducts = filteredProducts.slice(start, end);
+        pageProducts.forEach(item => {
+          container.append(`
+            <div class="card" data-category="${item.category || ''}" style="background: linear-gradient(135deg, #ffb6c1 0%, #ff69b4 100%); color: #222; border-radius: 15px; padding: 20px 16px 18px 16px; text-align: center; transition: 0.3s; box-shadow: 0 0 10px rgba(255, 105, 180, 0.1); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 260px; min-height: 370px; max-width: 100%; margin-bottom: 20px;">
+              <img src="/images/${item.product_image}" alt="${item.description}" style="width: 100%; max-width: 210px; max-height: 210px; height: auto; object-fit: contain; background-color: #fff; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(255, 105, 180, 0.08);">
+              <h3 style="color: #1a1a1a; font-family: 'Playfair Display', serif; font-size: 2.1em; font-weight: 800; margin: 18px 0 8px 0;">${item.description}</h3>
+              <p style="color: #333; font-size: 1.18em; font-weight: 600; margin: 8px 0 6px 0;">${item.category ? item.category.charAt(0).toUpperCase() + item.category.slice(1) : ''}</p>
+              <p style="color: #333; font-size: 1.18em; font-weight: 600; margin: 8px 0 6px 0;">₱${item.sell_price}</p>
+              <a href="#" class="btn small" style="color: #ff69b4; font-weight: 800; font-size: 1.1em; letter-spacing: 0.5px; background-color: #111; border-radius: 30px; padding: 10px 20px; margin-top: 10px;">Shop Now</a>
+            </div>
+          `);
+        });
+        // Pagination controls
+        let paginationHtml = '<div id="pagination" style="text-align:center;margin-top:24px;">';
+        for (let i = 1; i <= totalPages; i++) {
+          paginationHtml += `<button class="btn" style="margin:0 4px;${i===currentPage?'background:#ff69b4;color:#fff;':''}" data-page="${i}">${i}</button>`;
+        }
+        paginationHtml += '</div>';
+        if (totalPages > 1) {
+          container.after(paginationHtml);
+        }
+      }
+
+      // Fetch all products once
+      fetch('http://localhost:3000/api/v1/items')
+        .then(res => res.json())
+        .then(data => {
+          allProducts = data.rows || [];
+          filteredProducts = allProducts;
+          currentPage = 1;
+          renderProducts();
+        });
+
+      // Search/filter events
+      $('#searchBox, #categoryFilter').on('input change', filterProducts);
+      $('#searchBtn').on('click', function (e) {
+        e.preventDefault();
+        filterProducts();
+      });
+
+      // Pagination click
+      $(document).on('click', '#pagination button', function() {
+        currentPage = parseInt($(this).data('page'));
+        renderProducts();
+      });
+
+      // Infinite scroll event: go to next page if available
+      $(window).on('scroll', function() {
+        if (loading) return;
+        const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 120) {
+          if (currentPage < totalPages) {
+            loading = true;
+            currentPage++;
+            renderProducts();
+            setTimeout(() => { loading = false; }, 400);
+          }
+        }
+      });
+    });
+  </script>
+
+  <footer>
+    <p>&copy; 2025 Fashionista. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

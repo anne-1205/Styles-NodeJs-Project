@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Fashion Shop</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- jQuery (load before using it) -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background: linear-gradient(135deg, #000 0%, #2c002e 100%);
+        color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+    nav {
+        background: #ff69b4;
+        padding: 18px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    nav ul {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    nav ul li {
+        margin: 0 22px;
+    }
+    nav ul li a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: 700;
+        font-size: 17px;
+        letter-spacing: 1px;
+        border-radius: 22px;
+        padding: 8px 18px;
+        transition: all 0.3s;
+    }
+    nav ul li a:hover, nav ul li a.active {
+        background: #fff;
+        color: #ff69b4;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 80px auto;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .container h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      color: #ff69b4;
+    }
+
+    .container p {
+      font-size: 1.2rem;
+      color: #ccc;
+      margin-bottom: 40px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background-color: #1c1c1c;
+      border: 1px solid #ff69b4;
+      border-radius: 15px;
+      padding: 30px;
+      width: 220px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+    }
+
+    .card i {
+      font-size: 2.5rem;
+      color: #ff69b4;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      margin: 10px 0;
+      color: #fff;
+    }
+
+    .card p {
+      color: #aaa;
+      font-size: 0.95rem;
+    }
+
+    #logoutBtn {
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      nav ul {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .stats {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <ul>
+        <li><a href="admin.html" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="adminProducts.html"><i class="fas fa-tshirt"></i> Products</a></li>
+        <li><a href="adminUsers.html"><i class="fas fa-users"></i> Users</a></li>
+        <li><a href="adminOrders.html"><i class="fas fa-box-open"></i> Orders</a></li>
+                            <li><a href="adminSales.html"><i class="fas fa-chart-pie"></i> Sales</a></li>
+                    <li><a href="adminReviews.html"><i class="fas fa-star"></i> Reviews</a></li>
+        <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h1>Welcome, Admin!</h1>
+    <p>Manage your fashion empire with style and elegance.</p>
+
+    <div class="stats">
+      <div class="card">
+        <i class="fas fa-boxes"></i>
+        <h3>1,240</h3>
+        <p>Total Products</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-user-friends"></i>
+        <h3>860</h3>
+        <p>Registered Users</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-shopping-cart"></i>
+        <h3>450</h3>
+        <p>Orders This Month</p>
+      </div>
+      <div class="card" onclick="window.location.href='adminSales.html'" style="cursor:pointer;">
+        <i class="fas fa-chart-pie"></i>
+        <h3>Sales</h3>
+        <p>View Sales Analytics</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      $('#logoutBtn').on('click', function () {
+        sessionStorage.clear();
+        window.location.href = 'guest.html';
+      });
+    });
+  </script>
+</body>
+</html>

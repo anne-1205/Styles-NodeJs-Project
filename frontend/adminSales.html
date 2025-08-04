@@ -1,0 +1,425 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin - Sales Analytics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 10;
+    }
+
+    .sidebar .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2em;
+      color: #ff69b4;
+      text-align: center;
+      padding: 32px 0 18px 0;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav ul li {
+      margin: 18px 0;
+      text-align: center;
+    }
+
+    .sidebar nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.08em;
+      padding: 10px 0;
+      display: block;
+      border-radius: 18px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .sidebar nav ul li a.active,
+    .sidebar nav ul li a:hover {
+      background: linear-gradient(90deg, #ff69b4 0%, #ffb6d2 100%);
+      color: #18141c;
+    }
+
+    .sidebar .user-section {
+      text-align: center;
+      padding: 24px 0 32px 0;
+      border-top: 1px solid #444;
+    }
+
+    .sidebar .user-section button {
+      background: #ff69b4;
+      color: #fff;
+      border: none;
+      border-radius: 18px;
+      padding: 10px 28px;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+
+    .sidebar .user-section button:hover {
+      background: #e754a0;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      width: calc(100vw - 220px);
+      min-height: 100vh;
+      background-color: #f8f8fa;
+      padding: 36px 32px 32px 32px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+      margin-bottom: 18px;
+    }
+
+    .dashboard-card {
+      background: linear-gradient(135deg, #ffb6d2 0%, #ff69b4 100%);
+      color: #18141c;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(255, 105, 180, 0.2);
+      padding: 28px 24px 22px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      position: relative;
+      min-height: 110px;
+    }
+
+    .dashboard-card .card-title {
+      font-size: 1.1em;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #d72660;
+    }
+
+    .dashboard-card .card-value {
+      font-size: 2.1em;
+      font-family: 'Playfair Display', serif;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #18141c;
+    }
+
+    .dashboard-card .card-desc {
+      font-size: 1em;
+      color: #2c002e;
+      opacity: 0.8;
+    }
+
+    .dashboard-card .card-icon {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      font-size: 2.2em;
+      color: #d72660;
+      opacity: 0.18;
+    }
+
+    .dashboard-main {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .main-charts {
+      flex: 2 1 480px;
+      background: #1a1a1a;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(255, 105, 180, 0.1);
+      padding: 32px 28px 18px 28px;
+      margin-bottom: 18px;
+      min-width: 340px;
+      color: #18141c;
+    }
+
+    .main-charts h3 {
+      font-family: 'Playfair Display', serif;
+      color: #ff69b4;
+      font-size: 1.25em;
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .side-charts {
+      flex: 1 1 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      min-width: 280px;
+    }
+
+    .side-chart-card {
+      background: #1a1a1a;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(255, 105, 180, 0.1);
+      padding: 28px 18px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #18141c;
+    }
+
+    .side-chart-card h3 {
+      font-family: 'Playfair Display', serif;
+      color: #ff69b4;
+      font-size: 1.1em;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .side-chart-card canvas {
+      max-width: 180px;
+      height: 180px !important;
+    }
+
+    .charts-row {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .chart-card {
+      background: #1a1a1a;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(255, 105, 180, 0.1);
+      padding: 28px 18px 18px 18px;
+      flex: 1 1 320px;
+      min-width: 280px;
+      color: #18141c;
+    }
+
+    .chart-card h3 {
+      font-family: 'Playfair Display', serif;
+      color: #ff69b4;
+      font-size: 1.1em;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .chart-card canvas {
+      width: 100% !important;
+      max-width: 320px;
+      height: 180px !important;
+    }
+
+    .chart-card table {
+      width: 100%;
+      background: #1a1a1a;
+      color: #18141c;
+      font-size: 0.98em;
+      border-collapse: collapse;
+    }
+
+    .chart-card th, .chart-card td {
+      padding: 6px 8px;
+      text-align: left;
+      border: 1px solid #444;
+    }
+
+    .chart-card thead {
+      background-color: #ff69b4;
+      color: #fff;
+    }
+
+    .chart-card table, .side-chart-card table {
+      color: #18141c;
+      background: #fff;
+    }
+
+    .chart-card th, .chart-card td, .side-chart-card th, .side-chart-card td {
+      color: #18141c;
+      border: 1px solid #ffd6e8;
+    }
+
+    .chart-card thead, .side-chart-card thead {
+      background-color: #ff69b4;
+      color: #fff;
+    }
+
+    @media (max-width: 1100px) {
+      .main-content {
+        padding: 18px 4px;
+      }
+      .dashboard-main {
+        flex-direction: column;
+      }
+      .main-charts,
+      .side-charts {
+        width: 100%;
+      }
+      .charts-row {
+        flex-direction: column;
+        gap: 18px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar {
+        width: 100px;
+      }
+      .main-content {
+        margin-left: 100px;
+        padding: 8px 2px;
+      }
+      .dashboard-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .dashboard-card {
+        min-height: 80px;
+        padding: 14px 8px;
+      }
+      .dashboard-card .card-title {
+        font-size: 0.95em;
+      }
+      .dashboard-card .card-value {
+        font-size: 1.2em;
+      }
+      .dashboard-card .card-icon {
+        font-size: 1.2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div>
+      <div class="logo">STYLES</div>
+      <nav>
+        <ul>
+          <li><a href="admin.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+          <li><a href="adminProducts.html"><i class="fas fa-tshirt"></i> Products</a></li>
+          <li><a href="adminUsers.html"><i class="fas fa-users"></i> Users</a></li>
+          <li><a href="adminOrders.html"><i class="fas fa-box-open"></i> Orders</a></li>
+          <li><a href="adminSales.html" class="active"><i class="fas fa-chart-pie"></i> Sales</a></li>
+          <li><a href="adminReviews.html"><i class="fas fa-star"></i> Reviews</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="user-section">
+      <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="dashboard-cards">
+      <div class="dashboard-card">
+        <div class="card-title">Total Sales</div>
+        <div class="card-value" id="totalSales">₱0</div>
+        <div class="card-desc">All-time revenue</div>
+        <div class="card-icon"><i class="fas fa-coins"></i></div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Orders</div>
+        <div class="card-value" id="totalOrders">0</div>
+        <div class="card-desc">Total orders placed</div>
+        <div class="card-icon"><i class="fas fa-shopping-cart"></i></div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Customers</div>
+        <div class="card-value" id="totalCustomers">0</div>
+        <div class="card-desc">Registered users</div>
+        <div class="card-icon"><i class="fas fa-users"></i></div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Products</div>
+        <div class="card-value" id="totalProducts">0</div>
+        <div class="card-desc">Active products</div>
+        <div class="card-icon"><i class="fas fa-tshirt"></i></div>
+      </div>
+    </div>
+
+    <div class="dashboard-main">
+      <div class="main-charts">
+        <h3>Sales Trend (Line Chart)</h3>
+        <canvas id="lineChart"></canvas>
+        <div class="charts-row">
+          <div class="chart-card">
+            <h3>Sales by Month (Bar Chart)</h3>
+            <canvas id="barChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Sales by Category (Pie Chart)</h3>
+            <canvas id="pieChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-charts">
+        <div class="side-chart-card">
+          <h3>Order Status Distribution</h3>
+          <canvas id="orderStatusChart"></canvas>
+        </div>
+        <div class="side-chart-card">
+          <h3>Recent Orders</h3>
+          <table id="recentOrdersTable" style="width:100%; min-width:320px;">
+            <thead><tr><th>Date</th><th>User</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="side-chart-card">
+          <h3>Top Selling Products</h3>
+          <canvas id="topProductsChart"></canvas>
+        </div>
+        <div class="side-chart-card">
+          <h3>Sales by User</h3>
+          <canvas id="salesByUserChart"></canvas>
+        </div>
+        <div class="side-chart-card">
+          <h3>Sales Heatmap (by Day of Week)</h3>
+          <canvas id="salesHeatmapChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $('#logoutBtn').on('click', function () {
+      sessionStorage.clear();
+      window.location.href = 'guest.html';
+    });
+  </script>
+  <script src="js/adminSales.js"></script>
+</body>
+</html>

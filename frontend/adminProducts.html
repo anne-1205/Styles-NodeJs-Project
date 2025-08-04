@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Admin - Products</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/adminProducts.js"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #000 0%, #2c002e 100%);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background: #ff69b4;
+            padding: 18px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 0 22px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 17px;
+            letter-spacing: 1px;
+            border-radius: 22px;
+            padding: 8px 18px;
+            transition: all 0.3s;
+        }
+        nav ul li a:hover, nav ul li a.active {
+            background: #fff;
+            color: #ff69b4;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 36px;
+            font-family: 'Playfair Display', serif;
+            color: #ff69b4;
+            font-size: 2.2em;
+            letter-spacing: 1px;
+        }
+        #addProductBtn {
+            display: block;
+            margin: 32px auto 24px;
+            padding: 12px 32px;
+            font-size: 17px;
+            font-weight: bold;
+            background: #ff69b4;
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        #addProductBtn:hover {
+            background: #e754a0;
+        }
+        #productForm {
+            max-width: 480px;
+            background: #1a1a1a;
+            margin: 0 auto 36px;
+            padding: 32px;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px rgba(255, 105, 180, 0.2);
+            display: none;
+        }
+        #productForm input,
+        #productForm select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1.5px solid #ff69b4;
+            font-size: 15px;
+            background: #2b2b2b;
+            color: #fff;
+            margin-bottom: 14px;
+        }
+        #saveProductBtn, #cancelProductBtn {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+            border: none;
+            margin-top: 8px;
+        }
+        #saveProductBtn {
+            background: #ff69b4;
+            color: #fff;
+        }
+        #cancelProductBtn {
+            background: #444;
+            color: #ff69b4;
+        }
+        #saveProductBtn:hover {
+            background: #e754a0;
+        }
+        #cancelProductBtn:hover {
+            background: #333;
+        }
+        #products {
+            width: 98%;
+            margin: 0 auto 40px auto;
+        }
+        #productTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffb6d2; /* Full pink background */
+    border-radius: 16px;
+    overflow: hidden;
+    color: #000; /* Change text color to black for contrast */
+}
+#productTable th, #productTable td {
+    padding: 14px 12px;
+    text-align: center;
+    border-bottom: 1.5px solid #fff;
+}
+#productTable th {
+    background: #ff69b4;
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.15em;
+}
+#productTable tr:nth-child(even) {
+    background: #ffc1dc; /* Light pink for alternate rows */
+}
+#productTable img {
+    border-radius: 8px;
+    width: 54px;
+    height: 54px;
+    object-fit: cover;
+}
+
+        .editBtn, .deleteBtn {
+            padding: 7px 16px;
+            margin: 0 4px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .editBtn {
+            background: #17a2b8;
+            color: #fff;
+        }
+        .editBtn:hover {
+            background: #138496;
+        }
+        .deleteBtn {
+            background: #dc3545;
+            color: #fff;
+        }
+        .deleteBtn:hover {
+            background: #c82333;
+        }
+        @media (max-width: 700px) {
+            #productForm, #products { width: 98%; }
+            #productTable th, #productTable td { padding: 8px 4px; font-size: 0.95em; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="admin.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a class="active" href="adminProducts.html"><i class="fas fa-tshirt"></i> Products</a></li>
+            <li><a href="adminUsers.html"><i class="fas fa-users"></i> Users</a></li>
+            <li><a href="adminOrders.html"><i class="fas fa-box-open"></i> Orders</a></li>
+                  <li><a href="adminSales.html"><i class="fas fa-chart-pie"></i> Sales</a></li>
+      <li><a href="adminReviews.html"><i class="fas fa-star"></i> Reviews</a></li>
+      <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
+    <h2>Manage Fashion Products</h2>
+    <button id="addProductBtn"><i class="fas fa-plus"></i> Add Product</button>
+    <div id="productForm">
+        <input type="hidden" id="productId" />
+        <input type="text" id="description" placeholder="Description" />
+        <select id="category">
+            <option value="">Select Category</option>
+            <option value="dress">Dress</option>
+            <option value="jewelry">Jewelry</option>
+            <option value="shoes">Shoes</option>
+            <option value="bags">Bags</option>
+            <option value="accessories">Accessories</option>
+        </select>
+        <input type="number" id="cost_price" placeholder="Cost Price" />
+        <input type="number" id="sell_price" placeholder="Sell Price" />
+        <input type="number" id="quantity" placeholder="Quantity" />
+        <input type="file" id="product_image" />
+        <button id="saveProductBtn">Save</button>
+        <button id="cancelProductBtn">Cancel</button>
+    </div>
+    <div id="products">
+        <table id="productTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Cost Price</th>
+                    <th>Sell Price</th>
+                    <th>Quantity</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script>
+        $('#logoutBtn').on('click', function () {
+            sessionStorage.clear();
+            window.location.href = 'guest.html';
+        });
+
+        $('#addProductBtn').on('click', function () {
+            $('#productForm').slideDown();
+        });
+
+        $('#cancelProductBtn').on('click', function () {
+            $('#productForm').slideUp();
+        });
+    </script>
+</body>
+</html>

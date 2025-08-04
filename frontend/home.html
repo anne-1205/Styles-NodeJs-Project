@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Home - Fashionista</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <!-- jQuery & Carousel -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+  <style>
+    :root {
+      --primary-pink: #ff69b4;
+      --light-pink: #ffc0cb;
+      --black: #111;
+      --dark-gray: #1c1c1c;
+      --white: #fff;
+      --font-main: 'Montserrat', sans-serif;
+      --font-heading: 'Playfair Display', serif;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--black);
+      color: var(--white);
+      font-family: var(--font-main);
+    }
+
+    nav {
+      background-color: var(--dark-gray);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 8px 15px;
+      border-radius: 25px;
+      transition: background-color 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      background-color: var(--primary-pink);
+      color: var(--black);
+    }
+
+    .hero {
+      padding: 20px;
+      background: #ffb6c1;
+    }
+
+    .owl-carousel .item img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .search-filter {
+      margin: 40px 30px 20px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .search-filter input[type="text"],
+    .search-filter input[type="number"],
+    .search-filter select {
+      padding: 10px 15px;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      width: 180px;
+    }
+
+    .container {
+      padding: 0 30px 50px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .row.card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: flex-start;
+      margin-top: 20px;
+    }
+    .card {
+      background: linear-gradient(135deg, #ffb6c1 0%, #ff69b4 100%);
+      color: #222;
+      border-radius: 15px;
+      padding: 20px 16px 18px 16px;
+      text-align: center;
+      transition: 0.3s;
+      box-shadow: 0 0 10px rgba(255, 105, 180, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 260px;
+      min-height: 370px;
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+    .card h3, .card p {
+      color: #222;
+    }
+    .card img {
+      width: 100%;
+      max-width: 210px;
+      max-height: 210px;
+      height: auto;
+      object-fit: contain;
+      background-color: #fff;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(255, 105, 180, 0.08);
+    }
+    @media (max-width: 900px) {
+      .row.card-container {
+        gap: 18px;
+      }
+      .card {
+        width: 48%;
+        min-width: 180px;
+        padding: 14px 8px 12px 8px;
+      }
+    }
+    @media (max-width: 600px) {
+      .row.card-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .card {
+        width: 98%;
+        min-width: 0;
+        padding: 10px 4px 10px 4px;
+      }
+      .card img {
+        max-width: 98vw;
+        max-height: 160px;
+      }
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.25);
+    }
+
+    .card h3 {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      color: var(--primary-pink);
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #111;
+  color: #ff69b4; /* Make text pink */
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 30px;
+  transition: 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+
+    .btn:disabled, .btn[disabled] {
+      background-color: #222 !important;
+      color: #ff69b4 !important;
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn:hover:enabled {
+      background-color: #ff69b4;
+      color: #111;
+    }
+
+    h2.section-title {
+      text-align: center;
+      font-family: var(--font-heading);
+      font-size: 32px;
+      color: var(--light-pink);
+      margin-top: 60px;
+    }
+
+    /* Enhanced Autocomplete styling */
+    #autocompleteDropdown {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    #autocompleteDropdown .autocomplete-item {
+      padding: 10px 15px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.2s;
+      color: #333;
+      font-size: 14px;
+    }
+
+    #autocompleteDropdown .autocomplete-item:hover,
+    #autocompleteDropdown .autocomplete-item.selected {
+      background-color: #ff69b4;
+      color: #fff;
+    }
+
+    #autocompleteDropdown .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+
+    #autocompleteDropdown .autocomplete-item i {
+      margin-right: 8px;
+      color: #999;
+    }
+
+    #autocompleteDropdown .autocomplete-item:hover i,
+    #autocompleteDropdown .autocomplete-item.selected i {
+      color: #fff;
+    }
+
+    /* Loading indicator */
+    #loading-indicator {
+      text-align: center;
+      padding: 20px;
+      color: #ff69b4;
+      font-size: 16px;
+    }
+
+    #loading-indicator i {
+      margin-right: 8px;
+    }
+
+    /* Error styling for form validation */
+    .error {
+      border-color: #ff6b6b !important;
+      box-shadow: 0 0 5px rgba(255, 107, 107, 0.3) !important;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 12px;
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 600px) {
+      .search-filter input,
+      .search-filter select {
+        width: 100%;
+      }
+    }
+
+    .card h3 {
+      color: #1a1a1a !important;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.1em;
+      font-weight: 800;
+      margin: 18px 0 8px 0;
+    }
+    .card p {
+      color: #333 !important;
+      font-size: 1.18em;
+      font-weight: 600;
+      margin: 8px 0 6px 0;
+    }
+    .card .btn {
+  color: #ff69b4; /* Pink text */
+  font-weight: 800;
+  font-size: 1.1em;
+  letter-spacing: 0.5px;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <ul style="display: flex; justify-content: center; align-items: center; gap: 20px; margin: 0; padding: 0;">
+      <li><a href="home.html" class="active"><i class="fas fa-home icon"></i>Home</a></li>
+      <li><a href="cart.html"><i class="fas fa-shopping-cart icon"></i>Cart</a></li>
+      <li><a href="orders.html"><i class="fas fa-box icon"></i>Orders</a></li>
+      <li style="display: flex; align-items: center; gap: 10px;">
+        <img id="navProfilePic" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNmZjY5YjQiLz4KPHBhdGggZD0iTTE2IDhDMTguMjA5MSA4IDIwIDkuNzkwODYgMjAgMTJDMjAgMTQuMjA5MSAxOC4yMDkxIDE2IDE2IDE2QzEzLjc5MDkgMTYgMTIgMTQuMjA5MSAxMiAxMkMxMiA5Ljc5MDg2IDEzLjc5MDkgOCAxNiA4WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTI0IDI0QzI0IDI2LjIwOTEgMjIuMjA5MSAyOCAyMCAyOEgxMkM5Ljc5MDg2IDI4IDggMjYuMjA5MSA4IDI0VjIyQzggMTkuNzkwOSA5Ljc5MDg2IDE4IDEyIDE4SDIwQzIyLjIwOTEgMTggMjQgMTkuNzkwOSAyNCAyMlYyNFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="Profile" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #ff69b4; object-fit: cover;">
+        <a href="profile.html"><i class="fas fa-user icon"></i>Profile</a>
+      </li>
+      <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt icon"></i>Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Carousel -->
+  <section class="hero">
+    <div class="owl-carousel owl-theme">
+      <div class="item"><img src="/images/banner1.jpg" alt="Banner 1"></div>
+      <div class="item"><img src="/images/banner2.jpg" alt="Banner 2"></div>
+      <div class="item"><img src="/images/banner3.jpg" alt="Banner 3"></div>
+    </div>
+  </section>
+
+  <!-- Search + Filter + Price Range -->
+  <div class="container">
+    <h2 class="section-title">Featured Collections</h2>
+    <div class="search-filter">
+      <div style="position:relative;display:inline-block;">
+        <input type="text" id="searchBox" placeholder="Search products..." />
+        <div id="autocompleteDropdown" style="position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:8px;max-height:200px;overflow-y:auto;z-index:1000;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
+      </div>
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="dress">Dresses</option>
+        <option value="jewelry">Jewelry</option>
+        <option value="shoes">Shoes</option>
+        <option value="bags">Bags</option>
+        <option value="accessories">Accessories</option>
+      </select>
+      <input type="number" id="minPrice" placeholder="Min Price" min="0">
+      <input type="number" id="maxPrice" placeholder="Max Price" min="0">
+      <button id="searchBtn" class="btn">Search</button>
+    </div>
+
+    <div id="products" class="row card-container"></div>
+  </div>
+
+  <div id="productModalOverlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.6);z-index:10000;justify-content:center;align-items:center;padding:20px;box-sizing:border-box;">
+    <div id="productModalContent" style="background:#fff;color:#222;border-radius:18px;max-width:500px;width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.25);padding:40px 30px 30px 30px;position:relative;">
+      <button id="closeProductModal" style="position:absolute;top:20px;right:20px;background:#ff69b4;border:none;font-size:1.8em;color:#fff;cursor:pointer;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(255,105,180,0.3);z-index:10001;">&times;</button>
+      <img id="modalProductImage" src="" alt="" style="width:100%;max-width:280px;display:block;margin:0 auto 20px auto;border-radius:12px;box-shadow:0 2px 12px #ffb6c1;">
+      <h2 id="modalProductName" style="font-family:'Playfair Display',serif;font-size:2.2em;color:#ff69b4;text-align:center;margin-bottom:10px;"></h2>
+      <div id="modalProductCategory" style="text-align:center;color:#d72660;font-weight:600;margin-bottom:10px;font-size:1.1em;"></div>
+      <div id="modalProductPrice" style="text-align:center;font-size:1.5em;font-weight:700;margin-bottom:10px;"></div>
+      <div id="modalProductStock" style="text-align:center;font-size:1.1em;color:#666;margin-bottom:20px;"></div>
+      <div id="modalProductReviews" style="margin-top:20px;"></div>
+      <button id="modalAddToCart" class="btn" style="width:100%;margin-top:20px;background:#ff69b4;color:#fff;font-size:1.2em;padding:12px;">Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Custom Notification Modal -->
+  <div id="notificationModal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;color:#ff69b4;border-radius:20px;padding:30px 40px;box-shadow:0 8px 32px rgba(255,105,180,0.4);z-index:10002;text-align:center;min-width:300px;max-width:400px;border:2px solid #ff69b4;">
+    <div style="font-size:3em;margin-bottom:15px;">🛍️</div>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.8em;margin-bottom:10px;color:#ff69b4;">Success!</h3>
+    <p id="notificationMessage" style="font-size:1.2em;margin-bottom:25px;color:#ff69b4;">Item added to cart!</p>
+    <button id="notificationClose" style="background:#ff69b4;color:#000;border:none;border-radius:25px;padding:12px 30px;font-weight:bold;font-size:1.1em;cursor:pointer;transition:all 0.3s;">OK</button>
+  </div>
+
+  <!-- Script -->
+  <script>
+    $(document).ready(function () {
+      // Carousel
+      $('.owl-carousel').owlCarousel({
+        items: 1,
+        loop: true,
+        margin: 10,
+        nav: false,
+        autoplay: true,
+        autoplayTimeout: 4000,
+        autoplayHoverPause: true
+      });
+
+      // Logout
+      $('#logoutBtn').click(function () {
+        sessionStorage.clear();
+        window.location.href = 'guest.html';
+      });
+
+      let allProducts = [];
+      let filteredProducts = [];
+      let currentPage = 1;
+      const productsPerPage = 8;
+      let loading = false;
+      let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+      let selectedAutocompleteIndex = -1;
+
+      // Autocomplete functionality
+      function showAutocomplete(query) {
+        if (!query.trim()) {
+          $('#autocompleteDropdown').hide();
+          return;
+        }
+
+        const suggestions = [];
+        const queryLower = query.toLowerCase();
+
+        // Add product name suggestions
+        allProducts.forEach(product => {
+          const name = product.description || '';
+          if (name.toLowerCase().includes(queryLower)) {
+            suggestions.push({
+              text: name,
+              type: 'product',
+              category: product.category || ''
+            });
+          }
+        });
+
+        // Add category suggestions
+        const categories = ['dress', 'jewelry', 'shoes', 'bags', 'accessories'];
+        categories.forEach(cat => {
+          if (cat.toLowerCase().includes(queryLower)) {
+            suggestions.push({
+              text: cat.charAt(0).toUpperCase() + cat.slice(1),
+              type: 'category',
+              category: cat
+            });
+          }
+        });
+
+        // Add search history suggestions
+        searchHistory.forEach(term => {
+          if (term.toLowerCase().includes(queryLower) && !suggestions.find(s => s.text.toLowerCase() === term.toLowerCase())) {
+            suggestions.push({
+              text: term,
+              type: 'history'
+            });
+          }
+        });
+
+        // Remove duplicates and limit to 8 suggestions
+        const uniqueSuggestions = suggestions.filter((suggestion, index, self) => 
+          index === self.findIndex(s => s.text.toLowerCase() === suggestion.text.toLowerCase())
+        ).slice(0, 8);
+
+        if (uniqueSuggestions.length > 0) {
+          let html = '';
+          uniqueSuggestions.forEach((suggestion, index) => {
+            const icon = suggestion.type === 'product' ? 'fas fa-tshirt' : 
+                        suggestion.type === 'category' ? 'fas fa-tag' : 'fas fa-history';
+            const color = suggestion.type === 'product' ? '#ff69b4' : 
+                         suggestion.type === 'category' ? '#4CAF50' : '#666';
+            html += `<div class="autocomplete-item" data-index="${index}" data-text="${suggestion.text}" data-type="${suggestion.type}" data-category="${suggestion.category || ''}" style="padding:10px 15px;cursor:pointer;border-bottom:1px solid #eee;display:flex;align-items:center;gap:10px;color:#333;">
+                       <i class="${icon}" style="color:${color};width:16px;"></i>
+                       <span>${suggestion.text}</span>
+                     </div>`;
+          });
+          $('#autocompleteDropdown').html(html).show();
+        } else {
+          $('#autocompleteDropdown').hide();
+        }
+      }
+
+      function selectAutocompleteItem(index) {
+        const items = $('#autocompleteDropdown .autocomplete-item');
+        if (index >= 0 && index < items.length) {
+          items.removeClass('selected');
+          $(items[index]).addClass('selected');
+          selectedAutocompleteIndex = index;
+        }
+      }
+
+      function applyAutocompleteSelection() {
+        const selectedItem = $('#autocompleteDropdown .autocomplete-item.selected');
+        if (selectedItem.length > 0) {
+          const text = selectedItem.data('text');
+          const type = selectedItem.data('type');
+          const category = selectedItem.data('category');
+
+          $('#searchBox').val(text);
+          $('#autocompleteDropdown').hide();
+
+          // Add to search history
+          if (!searchHistory.includes(text)) {
+            searchHistory.unshift(text);
+            searchHistory = searchHistory.slice(0, 10); // Keep only last 10 searches
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+          }
+
+          // If it's a category, set the category filter
+          if (type === 'category' && category) {
+            $('#categoryFilter').val(category);
+          }
+
+          filterProducts();
+        }
+      }
+
+      function filterProducts() {
+        const search = $('#searchBox').val().trim().toLowerCase();
+        const category = $('#categoryFilter').val();
+        const minPrice = parseFloat($('#minPrice').val()) || 0;
+        const maxPrice = parseFloat($('#maxPrice').val()) || Infinity;
+        filteredProducts = allProducts.filter(item => {
+          const title = (item.description || '').toLowerCase();
+          const price = parseFloat(item.sell_price);
+          const matchSearch = title.includes(search);
+          const matchCategory = !category || (item.category && item.category === category);
+          const matchPrice = price >= minPrice && price <= maxPrice;
+          return matchSearch && matchCategory && matchPrice;
+        });
+        currentPage = 1;
+        renderProducts();
+      }
+
+      function renderProducts() {
+        const container = $('#products');
+        container.html('');
+        $('#pagination').remove();
+        if (filteredProducts.length === 0) {
+          container.html('<p style="color:#ff69b4;text-align:center;width:100%;">No products found.</p>');
+          return;
+        }
+        // Pagination logic
+        const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+        if (currentPage > totalPages) currentPage = 1;
+        const start = (currentPage - 1) * productsPerPage;
+        const end = start + productsPerPage;
+        const pageProducts = filteredProducts.slice(start, end);
+        pageProducts.forEach(item => {
+          container.append(`
+            <div class="card" data-category="${item.category || ''}">
+              <img src="/images/${item.product_image}" alt="${item.description}">
+              <h3>${item.description}</h3>
+              <p>${item.category ? item.category.charAt(0).toUpperCase() + item.category.slice(1) : ''}</p>
+              <p>₱${item.sell_price}</p>
+              <button class="btn add-to-cart" data-id="${item.item_id}" data-name="${item.description}" data-price="${item.sell_price}" data-image="/images/${item.product_image}">Add to Cart</button>
+            </div>
+          `);
+        });
+        // Pagination controls
+        let paginationHtml = '<div id="pagination" style="text-align:center;margin-top:24px;">';
+        for (let i = 1; i <= totalPages; i++) {
+          paginationHtml += `<button class="btn" style="margin:0 4px;${i===currentPage?'background:#ff69b4;color:#fff;':''}" data-page="${i}">${i}</button>`;
+        }
+        paginationHtml += '</div>';
+        if (totalPages > 1) {
+          container.after(paginationHtml);
+        }
+      }
+
+      function fetchAndRenderProducts() {
+        fetch('http://localhost:3000/api/v1/items')
+          .then(res => res.json())
+          .then(data => {
+            allProducts = data.rows || [];
+            filteredProducts = allProducts;
+            currentPage = 1;
+            renderProducts();
+          });
+      }
+
+      // Fetch on load
+      fetchAndRenderProducts();
+
+      // Event Listeners
+      $('#searchBox, #categoryFilter, #minPrice, #maxPrice').on('input change', filterProducts);
+      $('#searchBtn').on('click', function (e) {
+        e.preventDefault();
+        filterProducts();
+      });
+
+      // Autocomplete event handlers
+      $('#searchBox').on('input', function() {
+        const query = $(this).val();
+        showAutocomplete(query);
+        selectedAutocompleteIndex = -1;
+      });
+
+      $('#searchBox').on('keydown', function(e) {
+        const items = $('#autocompleteDropdown .autocomplete-item');
+        const itemCount = items.length;
+
+        if (itemCount === 0) return;
+
+        switch(e.keyCode) {
+          case 40: // Down arrow
+            e.preventDefault();
+            selectedAutocompleteIndex = (selectedAutocompleteIndex + 1) % itemCount;
+            selectAutocompleteItem(selectedAutocompleteIndex);
+            break;
+          case 38: // Up arrow
+            e.preventDefault();
+            selectedAutocompleteIndex = selectedAutocompleteIndex <= 0 ? itemCount - 1 : selectedAutocompleteIndex - 1;
+            selectAutocompleteItem(selectedAutocompleteIndex);
+            break;
+          case 13: // Enter
+            e.preventDefault();
+            applyAutocompleteSelection();
+            break;
+          case 27: // Escape
+            $('#autocompleteDropdown').hide();
+            selectedAutocompleteIndex = -1;
+            break;
+        }
+      });
+
+      // Click on autocomplete item
+      $(document).on('click', '#autocompleteDropdown .autocomplete-item', function() {
+        applyAutocompleteSelection();
+      });
+
+      // Hide autocomplete when clicking outside
+      $(document).on('click', function(e) {
+        if (!$(e.target).closest('#searchBox, #autocompleteDropdown').length) {
+          $('#autocompleteDropdown').hide();
+        }
+      });
+
+      // Hover effects for autocomplete items
+      $(document).on('mouseenter', '#autocompleteDropdown .autocomplete-item', function() {
+        $('#autocompleteDropdown .autocomplete-item').removeClass('selected');
+        $(this).addClass('selected');
+        selectedAutocompleteIndex = $(this).data('index');
+      });
+
+      // Pagination click
+      $(document).on('click', '#pagination button', function() {
+        currentPage = parseInt($(this).data('page'));
+        renderProducts();
+      });
+
+      // Infinite scroll event: go to next page if available
+      $(window).on('scroll', function() {
+        if (loading) return;
+        const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 120) {
+          if (currentPage < totalPages) {
+            loading = true;
+            currentPage++;
+            renderProducts();
+            setTimeout(() => { loading = false; }, 400);
+          }
+        }
+      });
+
+      // Add to Cart
+      $(document).on('click', '.add-to-cart', function () {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        const price = parseFloat($(this).data('price'));
+        const image = $(this).data('image');
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        let existing = cart.find(item => item.id == id);
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          cart.push({ id, name, price, image, quantity: 1 });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Show custom notification modal
+        $('#notificationMessage').text('Added to cart!');
+        $('#notificationModal').fadeIn(300);
+      });
+
+      // Close notification modal
+      $('#notificationClose').on('click', function() {
+        $('#notificationModal').fadeOut(300);
+      });
+
+      // Close notification modal when clicking outside
+      $(document).on('click', function(e) {
+        if ($(e.target).is('#notificationModal')) {
+          $('#notificationModal').fadeOut(300);
+        }
+      });
+    });
+  </script>
+  <script src="js/user.js"></script>
+  <script src="js/reviews.js"></script>
+  <script src="js/home.js"></script>
+
+</body>
+</html>

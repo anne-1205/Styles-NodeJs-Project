@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin - Users</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
+  <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #000 0%, #2c002e 100%);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* DataTable Custom Styling */
+    .dataTables_wrapper {
+      color: #fff;
+      margin: 20px auto;
+      width: 96%;
+    }
+
+    .dataTables_filter {
+      margin-bottom: 20px;
+    }
+
+    .dataTables_filter label {
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .dataTables_filter input {
+      background: #2a2a2a;
+      border: 2px solid #ff69b4;
+      border-radius: 8px;
+      color: #fff;
+      padding: 8px 12px;
+      margin-left: 10px;
+      font-size: 14px;
+    }
+
+    .dataTables_filter input:focus {
+      outline: none;
+      border-color: #ff1493;
+      box-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
+    }
+
+    .dataTables_length {
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .dataTables_length label {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .dataTables_length select {
+      background: #2a2a2a;
+      border: 2px solid #ff69b4;
+      border-radius: 8px;
+      color: #fff;
+      padding: 5px 10px;
+      margin: 0 5px;
+    }
+
+    .dataTables_info {
+      color: #fff;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    .dataTables_paginate {
+      margin-top: 15px;
+    }
+
+    .dataTables_paginate .paginate_button {
+      background: #2a2a2a;
+      border: 2px solid #ff69b4;
+      color: #fff !important;
+      padding: 8px 12px;
+      margin: 0 2px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .dataTables_paginate .paginate_button:hover {
+      background: #ff69b4;
+      color: #fff !important;
+      border-color: #ff1493;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+      background: #ff69b4;
+      color: #fff !important;
+      border-color: #ff1493;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+      background: #444;
+      color: #666 !important;
+      border-color: #555;
+      cursor: not-allowed;
+    }
+
+    .dt-buttons {
+      margin-bottom: 20px;
+    }
+
+    .dt-button {
+      background: linear-gradient(90deg, #ff69b4 0%, #ffb6d2 100%) !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 8px 16px !important;
+      margin: 0 5px !important;
+      font-weight: 600 !important;
+      font-size: 14px !important;
+      transition: all 0.3s !important;
+    }
+
+    .dt-button:hover {
+      background: linear-gradient(90deg, #ff1493 0%, #ff69b4 100%) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+    }
+
+    .dataTables_processing {
+      color: #fff !important;
+      background: rgba(255, 105, 180, 0.9) !important;
+      border-radius: 8px !important;
+    }
+    nav {
+      background: #ff69b4;
+      padding: 18px 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li {
+      margin: 0 22px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 17px;
+      border-radius: 22px;
+      padding: 8px 18px;
+      transition: all 0.3s;
+    }
+    nav ul li a:hover, nav ul li a.active {
+      background: #fff;
+      color: #ff69b4;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 36px;
+      font-family: 'Playfair Display', serif;
+      color: #ff69b4;
+      font-size: 2.2em;
+    }
+    #userTable {
+      width: 96%;
+      margin: 30px auto;
+      border-collapse: collapse;
+      background: #ffb6d2;
+      border-radius: 16px;
+      overflow: hidden;
+      color: #000;
+    }
+    #userTable th, #userTable td {
+      padding: 14px 12px;
+      text-align: center;
+      border-bottom: 1.5px solid #fff;
+    }
+    #userTable th {
+      background: linear-gradient(90deg, #ff69b4 0%, #ffb6d2 100%);
+      color: #fff;
+      font-weight: 900;
+      font-size: 1.1em;
+    }
+    .roleBtn, .statusBtn {
+      padding: 8px 18px;
+      font-weight: 700;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .roleBtn {
+      background: linear-gradient(90deg, #ffb347 0%, #ff69b4 100%);
+      color: #fff;
+      margin-right: 8px;
+    }
+    .statusBtn {
+      background: linear-gradient(90deg, #dc3545 0%, #ff69b4 100%);
+      color: #fff;
+    }
+
+    /* MODAL STYLES */
+    #customModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    #customModal .modal-content {
+      background: linear-gradient(135deg, #ffb6d2 0%, #ff69b4 100%);
+      border-radius: 18px;
+      padding: 32px 28px;
+      min-width: 340px;
+      max-width: 90%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+      text-align: center;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .toggle-btn {
+      display: inline-block;
+      padding: 10px 28px;
+      margin: 0 8px 16px;
+      border-radius: 22px;
+      border: 2px solid #ff69b4;
+      background: #fff;
+      color: #d72660;
+      font-weight: 800;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.08em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .toggle-btn.selected {
+      background: linear-gradient(90deg, #ff69b4 0%, #ffb6d2 100%);
+      color: #fff;
+      border: 2px solid #d72660;
+      transform: scale(1.04);
+    }
+
+    #modalOk, #modalCancel {
+      min-width: 100px;
+      padding: 10px 22px;
+      border-radius: 20px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      margin: 10px;
+    }
+    #modalOk {
+      background-color: #111;
+      color: #ff69b4;
+    }
+    #modalCancel {
+      background-color: #fff;
+      color: #d72660;
+    }
+
+    @media (max-width: 600px) {
+      .toggle-btn {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="admin.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="adminProducts.html"><i class="fas fa-tshirt"></i> Products</a></li>
+      <li><a class="active" href="adminUsers.html"><i class="fas fa-users"></i> Users</a></li>
+      <li><a href="adminOrders.html"><i class="fas fa-box-open"></i> Orders</a></li>
+      <li><a href="adminSales.html"><i class="fas fa-chart-pie"></i> Sales</a></li>
+      <li><a href="adminReviews.html"><i class="fas fa-star"></i> Reviews</a></li>
+      <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </nav>
+
+  <h2>Manage Users</h2>
+
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Modal -->
+  <div id="customModal">
+    <div class="modal-content">
+      <h3 id="modalTitle">Change</h3>
+      <div id="modalToggles"></div>
+      <button id="modalOk">OK</button>
+      <button id="modalCancel">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    let selectedUserId = null;
+    let currentType = null;
+    let currentValue = null;
+
+    function fetchUsers() {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        alert('Please login to access this page');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      $.ajax({
+        url: 'http://localhost:3000/api/v1/users',
+        method: 'GET',
+        headers: { 
+          'Authorization': 'Bearer ' + token 
+        },
+        success: function(data) {
+          const users = data.rows || data;
+          const tbody = $('#userTable tbody');
+          tbody.html('');
+          users.forEach(user => {
+            tbody.append(`
+              <tr>
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${user.role}</td>
+                <td>${user.status}</td>
+                <td>
+                  <button class="roleBtn" data-id="${user.id}" data-current="${user.role}">Change Role</button>
+                  <button class="statusBtn" data-id="${user.id}" data-current="${user.status}">Change Status</button>
+                </td>
+              </tr>
+            `);
+          });
+          // Initialize or re-initialize DataTable
+          if ($.fn.DataTable.isDataTable('#userTable')) {
+            $('#userTable').DataTable().destroy();
+          }
+          $('#userTable').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            responsive: true,
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel', 'pdf']
+          });
+        },
+        error: function(xhr) {
+          if (xhr.status === 401) {
+            alert('Please login to access this page');
+            window.location.href = 'login.html';
+          } else if (xhr.status === 403) {
+            alert('Access denied. Admin privileges required.');
+            window.location.href = 'home.html';
+          } else {
+            alert('Error loading users: ' + (xhr.responseJSON?.message || 'Unknown error'));
+          }
+        }
+      });
+    }
+
+    function showModal(id, type, current) {
+      selectedUserId = id;
+      currentType = type;
+      currentValue = current;
+
+      $('#modalTitle').text(`Change ${type.charAt(0).toUpperCase() + type.slice(1)}`);
+      const values = type === 'role' ? ['admin', 'user'] : ['active', 'inactive'];
+      const toggleHTML = values.map(v =>
+        `<button class="toggle-btn ${v === current ? 'selected' : ''}" data-value="${v}">${v}</button>`
+      ).join('');
+      $('#modalToggles').html(toggleHTML);
+      $('#customModal').fadeIn();
+    }
+
+    $(document).ready(function () {
+      fetchUsers();
+
+      $(document).on('click', '.roleBtn', function () {
+        showModal($(this).data('id'), 'role', $(this).data('current'));
+      });
+
+      $(document).on('click', '.statusBtn', function () {
+        showModal($(this).data('id'), 'status', $(this).data('current'));
+      });
+
+      $(document).on('click', '.toggle-btn', function () {
+        $('.toggle-btn').removeClass('selected');
+        $(this).addClass('selected');
+      });
+
+      $('#modalOk').click(function () {
+        const newValue = $('.toggle-btn.selected').data('value');
+        if (!selectedUserId || !currentType || !newValue) return;
+
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          alert('Please login to access this page');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        let url = `http://localhost:3000/api/v1/users/${selectedUserId}`;
+        if (currentType === 'role') url += '/role';
+        if (currentType === 'status') url += '/status';
+
+        const payload = {};
+        payload[currentType] = newValue;
+
+        $.ajax({
+          url,
+          method: 'PUT',
+          headers: { 
+            'Authorization': 'Bearer ' + token 
+          },
+          contentType: 'application/json',
+          data: JSON.stringify(payload),
+          success: function () {
+            $('#customModal').fadeOut();
+            fetchUsers();
+          },
+          error: function(xhr) {
+            if (xhr.status === 401) {
+              alert('Please login to access this page');
+              window.location.href = 'login.html';
+            } else if (xhr.status === 403) {
+              alert('Access denied. Admin privileges required.');
+              window.location.href = 'home.html';
+            } else {
+              alert('Error updating user: ' + (xhr.responseJSON?.message || 'Unknown error'));
+            }
+          }
+        });
+      });
+
+      $('#modalCancel').click(() => $('#customModal').fadeOut());
+
+      // Logout functionality
+      $('#logoutBtn').click(function() {
+        sessionStorage.clear();
+        window.location.href = 'guest.html';
+      });
+    });
+  </script>
+</body>
+</html>

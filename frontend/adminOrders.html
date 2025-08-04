@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin - Orders</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.6.15/sweetalert2.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.6.15/sweetalert2.all.min.js"></script>
+  <script src="js/adminOrders.js"></script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #000 0%, #2c002e 100%);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background: #ff69b4;
+      padding: 18px 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li {
+      margin: 0 22px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: 1px;
+      border-radius: 22px;
+      padding: 8px 18px;
+      transition: all 0.3s;
+    }
+    nav ul li a:hover, nav ul li a.active {
+      background: #fff;
+      color: #ff69b4;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 36px;
+      font-family: 'Playfair Display', serif;
+      color: #ff69b4;
+      font-size: 2.2em;
+      letter-spacing: 1px;
+    }
+    #orders {
+      width: 98%;
+      margin: 0 auto 40px auto;
+    }
+    #ordersTable {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffb6d2;
+      border-radius: 16px;
+      overflow: hidden;
+      color: #000;
+    }
+    #ordersTable th, #ordersTable td {
+      padding: 14px 12px;
+      text-align: center;
+      border-bottom: 1.5px solid #fff;
+    }
+    #ordersTable th {
+      background: #ff69b4;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.15em;
+    }
+    #ordersTable tr:nth-child(even) {
+      background: #ffc1dc;
+    }
+    #ordersTable tr:hover {
+      background: #ffe4ec;
+    }
+    #logoutBtn {
+      cursor: pointer;
+    }
+    /* Elegant status select styling */
+    select.order-status {
+      background: linear-gradient(90deg, #ffb6c1 0%, #ff69b4 100%);
+      color: #18141c;
+      border: none;
+      border-radius: 18px;
+      padding: 8px 18px;
+      font-weight: 700;
+      font-size: 1em;
+      box-shadow: 0 1px 4px rgba(255, 105, 180, 0.10);
+      outline: none;
+      transition: box-shadow 0.2s;
+      margin: 0 0 0 0;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+    }
+    select.order-status:focus {
+      box-shadow: 0 0 0 2px #ff69b4;
+    }
+    select.order-status option {
+      background: #fff;
+      color: #18141c;
+      font-weight: 600;
+    }
+    /* PDF Download Button Styling */
+    .admin-order-pdf-btn {
+      background: #ff69b4 !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 20px !important;
+      padding: 8px 16px !important;
+      font-weight: 700 !important;
+      font-size: 0.9em !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 2px 8px rgba(255, 105, 180, 0.3) !important;
+    }
+    .admin-order-pdf-btn:hover {
+      background: #e754a0 !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4) !important;
+    }
+    .admin-order-pdf-btn:active {
+      transform: translateY(0) !important;
+    }
+    /* Loading indicator */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #ff69b4;
+      font-size: 18px;
+    }
+    .loading i {
+      margin-right: 10px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Enhanced table styling */
+    #ordersTable {
+      box-shadow: 0 8px 32px rgba(255, 105, 180, 0.2);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    
+    #ordersTable th {
+      background: linear-gradient(135deg, #ff69b4 0%, #e754a0 100%);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.15em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    #ordersTable tr:hover {
+      background: #ffe4ec !important;
+      transform: scale(1.01);
+      transition: all 0.3s ease;
+    }
+    
+    /* Status badge styling */
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .status-pending { background: #6c757d; color: #fff; }
+    .status-shipped { background: #ffc107; color: #000; }
+    .status-delivered { background: #28a745; color: #fff; }
+    @media (max-width: 700px) {
+      #orders { width: 98%; }
+      #ordersTable th, #ordersTable td { padding: 8px 4px; font-size: 0.95em; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="admin.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="adminProducts.html"><i class="fas fa-tshirt"></i> Products</a></li>
+      <li><a href="adminUsers.html"><i class="fas fa-users"></i> Users</a></li>
+      <li><a href="adminOrders.html" class="active"><i class="fas fa-box-open"></i> Orders</a></li>
+      <li><a href="adminSales.html"><i class="fas fa-chart-pie"></i> Sales</a></li>
+      <li><a href="adminReviews.html"><i class="fas fa-star"></i> Reviews</a></li>
+      <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </nav>
+
+  <h2>Manage Orders</h2>
+
+  <div id="orders">
+    <!-- Loading indicator -->
+    <div class="loading">
+      <i class="fas fa-spinner"></i> Loading orders...
+    </div>
+  </div>
+
+  <script>
+    // Logout functionality
+    $('#logoutBtn').on('click', function () {
+      sessionStorage.clear();
+      window.location.href = 'guest.html';
+    });
+  </script>
+</body>
+</html>

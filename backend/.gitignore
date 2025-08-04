@@ -8,8 +8,12 @@
 # misc
 /config/.env
 /.env
-/images
 
+# Ignore images globally (if needed)
+# /images
+
+# But allow images inside backend
+!backend/images/
 
 
 npm-debug.log*

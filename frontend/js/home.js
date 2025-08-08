@@ -7,6 +7,14 @@ $(document).ready(function () {
     const productsPerPage = 8;
     let loading = false;
     let searchTimeout;
+    let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    let selectedAutocompleteIndex = -1;
+
+    // Debug function to track cart operations
+    function debugCart(operation, data) {
+        console.log(`Cart ${operation}:`, data);
+        console.log('Current cart:', JSON.parse(localStorage.getItem('cart') || '[]'));
+    }
 
     // Enhanced search and autocomplete functionality
     function initializeSearch() {
@@ -48,30 +56,55 @@ $(document).ready(function () {
 
         // Generate autocomplete suggestions
         function generateAutocompleteSuggestions(query) {
-            const suggestions = new Set();
+            const suggestions = [];
             const searchTerm = query.toLowerCase();
             
+            // Add product name suggestions
             allProducts.forEach(product => {
-                const name = product.description.toLowerCase();
-                const category = (product.category || '').toLowerCase();
+                const name = product.description || '';
+                const category = product.category || '';
                 
-                // Add matching product names
-                if (name.includes(searchTerm)) {
-                    const words = name.split(' ');
-                    words.forEach(word => {
-                        if (word.startsWith(searchTerm) && word.length > searchTerm.length) {
-                            suggestions.add(word);
-                        }
+                if (name.toLowerCase().includes(searchTerm)) {
+                    suggestions.push({
+                        text: name,
+                        type: 'product',
+                        category: category,
+                        icon: 'fas fa-tshirt',
+                        color: '#ff69b4'
                     });
                 }
                 
-                // Add matching categories
-                if (category.includes(searchTerm)) {
-                    suggestions.add(category);
+                // Add category suggestions
+                if (category.toLowerCase().includes(searchTerm)) {
+                    suggestions.push({
+                        text: category.charAt(0).toUpperCase() + category.slice(1),
+                        type: 'category',
+                        category: category,
+                        icon: 'fas fa-tag',
+                        color: '#4CAF50'
+                    });
                 }
             });
             
-            return Array.from(suggestions).slice(0, 8);
+            // Add search history suggestions
+            searchHistory.forEach(term => {
+                if (term.toLowerCase().includes(searchTerm) && 
+                    !suggestions.find(s => s.text.toLowerCase() === term.toLowerCase())) {
+                    suggestions.push({
+                        text: term,
+                        type: 'history',
+                        icon: 'fas fa-history',
+                        color: '#666'
+                    });
+                }
+            });
+            
+            // Remove duplicates and limit to 8 suggestions
+            const uniqueSuggestions = suggestions.filter((suggestion, index, self) => 
+                index === self.findIndex(s => s.text.toLowerCase() === suggestion.text.toLowerCase())
+            ).slice(0, 8);
+            
+            return uniqueSuggestions;
         }
 
         // Show autocomplete suggestions
@@ -83,8 +116,9 @@ $(document).ready(function () {
 
             let html = '';
             suggestions.forEach((suggestion, index) => {
-                html += `<div class="autocomplete-item" data-index="${index}" data-value="${suggestion}">
-                    <i class="fas fa-search"></i> ${suggestion}
+                html += `<div class="autocomplete-item" data-index="${index}" data-text="${suggestion.text}" data-type="${suggestion.type}" data-category="${suggestion.category || ''}" style="padding:10px 15px;cursor:pointer;border-bottom:1px solid #eee;display:flex;align-items:center;gap:10px;color:#333;transition:background-color 0.2s;">
+                    <i class="${suggestion.icon}" style="color:${suggestion.color};width:16px;"></i>
+                    <span>${suggestion.text}</span>
                 </div>`;
             });
             
@@ -94,22 +128,44 @@ $(document).ready(function () {
         // Real-time search
         searchBox.on('input', function() {
             const query = $(this).val();
+            if (query.length >= 2) {
+                const suggestions = generateAutocompleteSuggestions(query);
+                showAutocompleteSuggestions(suggestions);
+            } else {
+                autocompleteDropdown.hide();
+            }
             performSearch(query);
         });
 
         // Enhanced autocomplete selection
         $(document).on('click', '#autocompleteDropdown .autocomplete-item', function() {
-            const selectedValue = $(this).data('value');
-            searchBox.val(selectedValue);
+            const selectedText = $(this).data('text');
+            const selectedType = $(this).data('type');
+            const selectedCategory = $(this).data('category');
+            
+            searchBox.val(selectedText);
             autocompleteDropdown.hide();
-            performSearch(selectedValue);
+            
+            // Add to search history
+            if (!searchHistory.includes(selectedText)) {
+                searchHistory.unshift(selectedText);
+                searchHistory = searchHistory.slice(0, 10); // Keep only last 10 searches
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            }
+            
+            // If it's a category, set the category filter
+            if (selectedType === 'category' && selectedCategory) {
+                $('#categoryFilter').val(selectedCategory);
+            }
+            
+            performSearch(selectedText);
         });
 
         // Keyboard navigation for autocomplete
-        let selectedAutocompleteIndex = -1;
-        
         searchBox.on('keydown', function(e) {
             const itemCount = $('#autocompleteDropdown .autocomplete-item').length;
+            
+            if (itemCount === 0) return;
             
             switch(e.keyCode) {
                 case 40: // Down arrow
@@ -141,10 +197,26 @@ $(document).ready(function () {
         function applyAutocompleteSelection() {
             const selectedItem = $('#autocompleteDropdown .autocomplete-item.selected');
             if (selectedItem.length > 0) {
-                const selectedValue = selectedItem.data('value');
-                searchBox.val(selectedValue);
+                const selectedText = selectedItem.data('text');
+                const selectedType = selectedItem.data('type');
+                const selectedCategory = selectedItem.data('category');
+                
+                searchBox.val(selectedText);
                 autocompleteDropdown.hide();
-                performSearch(selectedValue);
+                
+                // Add to search history
+                if (!searchHistory.includes(selectedText)) {
+                    searchHistory.unshift(selectedText);
+                    searchHistory = searchHistory.slice(0, 10);
+                    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                }
+                
+                // If it's a category, set the category filter
+                if (selectedType === 'category' && selectedCategory) {
+                    $('#categoryFilter').val(selectedCategory);
+                }
+                
+                performSearch(selectedText);
             }
         }
 
@@ -152,6 +224,7 @@ $(document).ready(function () {
         $(document).on('click', function(e) {
             if (!$(e.target).closest('#searchBox, #autocompleteDropdown').length) {
                 autocompleteDropdown.hide();
+                selectedAutocompleteIndex = -1;
             }
         });
 
@@ -160,6 +233,36 @@ $(document).ready(function () {
             $('#autocompleteDropdown .autocomplete-item').removeClass('selected');
             $(this).addClass('selected');
             selectedAutocompleteIndex = $(this).data('index');
+        });
+
+        // Filter products based on search, category, and price
+        function filterProducts() {
+            const search = $('#searchBox').val().trim().toLowerCase();
+            const category = $('#categoryFilter').val();
+            const minPrice = parseFloat($('#minPrice').val()) || 0;
+            const maxPrice = parseFloat($('#maxPrice').val()) || Infinity;
+            
+            filteredProducts = allProducts.filter(item => {
+                const title = (item.description || '').toLowerCase();
+                const price = parseFloat(item.sell_price);
+                const itemCategory = (item.category || '').toLowerCase();
+                
+                const matchSearch = !search || title.includes(search) || itemCategory.includes(search);
+                const matchCategory = !category || itemCategory === category.toLowerCase();
+                const matchPrice = price >= minPrice && price <= maxPrice;
+                
+                return matchSearch && matchCategory && matchPrice;
+            });
+            
+            currentPage = 1;
+            renderProducts();
+        }
+
+        // Event listeners for filters
+        $('#categoryFilter, #minPrice, #maxPrice').on('change', filterProducts);
+        $('#searchBtn').on('click', function(e) {
+            e.preventDefault();
+            filterProducts();
         });
     }
 
@@ -302,18 +405,26 @@ $(document).ready(function () {
     });
 
     // Add to Cart from modal
-    $(document).on('click', '#modalAddToCart', function () {
+    $(document).on('click', '#modalAddToCart', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         const id = $(this).data('id');
         const name = $(this).data('name');
         const price = parseFloat($(this).data('price'));
         const image = $(this).data('image');
+        
         let cart = JSON.parse(localStorage.getItem('cart') || '[]');
         let existing = cart.find(item => item.id == id);
+        
         if (existing) {
             existing.quantity += 1;
+            debugCart('updated existing item', { id, name, newQuantity: existing.quantity });
         } else {
             cart.push({ id, name, price, image, quantity: 1 });
+            debugCart('added new item', { id, name, quantity: 1 });
         }
+        
         localStorage.setItem('cart', JSON.stringify(cart));
         
         // Show custom notification modal
@@ -328,19 +439,27 @@ $(document).ready(function () {
         renderProducts();
     });
 
-    // Add to Cart
-    $(document).on('click', '.add-to-cart', function () {
+    // Add to Cart - Main button handler
+    $(document).on('click', '.add-to-cart', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         const id = $(this).data('id');
         const name = $(this).data('name');
         const price = parseFloat($(this).data('price'));
         const image = $(this).data('image');
+        
         let cart = JSON.parse(localStorage.getItem('cart') || '[]');
         let existing = cart.find(item => item.id == id);
+        
         if (existing) {
             existing.quantity += 1;
+            debugCart('updated existing item', { id, name, newQuantity: existing.quantity });
         } else {
             cart.push({ id, name, price, image, quantity: 1 });
+            debugCart('added new item', { id, name, quantity: 1 });
         }
+        
         localStorage.setItem('cart', JSON.stringify(cart));
         
         // Show custom notification modal

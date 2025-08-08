@@ -1,5 +1,12 @@
 $(document).ready(function () {
     const url = 'http://172.34.98.64:4000/'
+    
+    // Debug function to track cart operations
+    function debugCart(operation, data) {
+        console.log(`Cart ${operation}:`, data);
+        console.log('Current cart:', JSON.parse(localStorage.getItem('cart') || '[]'));
+    }
+    
     function getCart() {
         let cart = localStorage.getItem('cart');
         return cart ? JSON.parse(cart) : [];
@@ -7,12 +14,16 @@ $(document).ready(function () {
 
     function saveCart(cart) {
         localStorage.setItem('cart', JSON.stringify(cart));
+        debugCart('saved', cart);
     }
 
     function renderCart() {
         let cart = getCart();
+        debugCart('rendering', cart);
+        
         let html = '';
         let total = 0;
+        
         if (cart.length === 0) {
             html = '<p>Your cart is empty.</p>';
         } else {
@@ -59,11 +70,66 @@ $(document).ready(function () {
         $('#cartTable').html(html);
     }
 
-    // function getUserId() {
-    //     let userId = sessionStorage.getItem('userId');
-
-    //     return userId ?? '';
-    // }
+    // Clear cart function for testing
+    function clearCart() {
+        localStorage.removeItem('cart');
+        debugCart('cleared', []);
+        renderCart();
+    }
+    
+    // Make clearCart globally accessible for debugging
+    window.clearCart = clearCart;
+    
+    // Function to inspect cart state
+    function inspectCart() {
+        const cart = getCart();
+        console.log('=== CART INSPECTION ===');
+        console.log('Cart items:', cart);
+        console.log('Cart length:', cart.length);
+        cart.forEach((item, index) => {
+            console.log(`Item ${index}:`, {
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                price: item.price,
+                quantity: item.quantity,
+                image: item.image
+            });
+        });
+        console.log('=== END INSPECTION ===');
+    }
+    
+    // Make inspectCart globally accessible for debugging
+    window.inspectCart = inspectCart;
+    
+    // Test function to add a product with quantity 1
+    function testAddToCart() {
+        const testProduct = {
+            id: 'test-product',
+            name: 'Test Product',
+            description: 'Test Product Description',
+            price: 100,
+            image: '/images/test.jpg',
+            quantity: 1
+        };
+        
+        let cart = getCart();
+        let existing = cart.find(item => item.id === testProduct.id);
+        
+        if (existing) {
+            existing.quantity += 1;
+            console.log('Updated existing item quantity to:', existing.quantity);
+        } else {
+            cart.push(testProduct);
+            console.log('Added new item with quantity:', testProduct.quantity);
+        }
+        
+        saveCart(cart);
+        renderCart();
+    }
+    
+    // Make testAddToCart globally accessible for debugging
+    window.testAddToCart = testAddToCart;
 
     const getToken = () => {
         const token = sessionStorage.getItem('token');
@@ -81,35 +147,49 @@ $(document).ready(function () {
         return JSON.parse(token)
     }
 
-    $('#cartTable').on('click', '.remove-item', function () {
+    // Remove item from cart
+    $('#cartTable').on('click', '.remove-item', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         let idx = $(this).data('idx');
         let cart = getCart();
+        debugCart('removing item', { idx, item: cart[idx] });
         cart.splice(idx, 1);
         saveCart(cart);
         renderCart();
     });
 
     // Quantity up button
-    $('#cartTable').on('click', '.quantity-up', function () {
+    $('#cartTable').on('click', '.quantity-up', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         let idx = $(this).data('idx');
         let cart = getCart();
         if (cart[idx]) {
             cart[idx].quantity += 1;
+            debugCart('increased quantity', { idx, item: cart[idx] });
             saveCart(cart);
             renderCart();
         }
     });
 
     // Quantity down button
-    $('#cartTable').on('click', '.quantity-down', function () {
+    $('#cartTable').on('click', '.quantity-down', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         let idx = $(this).data('idx');
         let cart = getCart();
         if (cart[idx] && cart[idx].quantity > 1) {
             cart[idx].quantity -= 1;
+            debugCart('decreased quantity', { idx, item: cart[idx] });
             saveCart(cart);
             renderCart();
         } else if (cart[idx] && cart[idx].quantity === 1) {
             // Remove item if quantity would become 0
+            debugCart('removing item (quantity 0)', { idx, item: cart[idx] });
             cart.splice(idx, 1);
             saveCart(cart);
             renderCart();
@@ -196,6 +276,8 @@ $(document).ready(function () {
     $('#checkoutModal').on('hidden.bs.modal', function () {
         $('#checkoutBtn').focus();
     });
+
+
 
     renderCart()
 
